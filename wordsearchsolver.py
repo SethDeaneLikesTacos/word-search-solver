@@ -125,9 +125,9 @@ def main():
     :return:
     """
     printmatrix()
-    #findWord()
+    findword()
     #createReferencesLetters()
-    imgrec.whatLetAmI("images/letters/b.png")
+    #imgrec.whatLetAmI("images/letters/b.png")
 
 
 main()
