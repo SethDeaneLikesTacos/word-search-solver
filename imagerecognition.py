@@ -1,46 +1,48 @@
 import numpy as np
 from PIL import Image
-from collections import Counter
 
 
 def determineletter(filePath):
     """
-
-    :param filePath: The filepath of a
-    :return:
+    Determines the letter of the image passed into the function.
+    :param filePath: The filepath of a picture to check the letter of.
+    :return: char of the letter that was found
     """
-    matchedAr = []  # Keeps track of the
-    loadRefs = open("letArRef.txt","r").read()
-    loadRefs = loadRefs.split("\n")
+    ref_file = open("letArRef.txt","r").read()
+    ref_lst = ref_file.split("\n")
+    # ref_lst is now a list of strings containing the rgb values of each letter.
 
     i = Image.open(filePath)
-    iar = np.array(i)
-    iarl = iar.tolist()
+    letter = str(np.array(i).tolist())
+    # letter is now a string containing the rgb values of the letter to check.
 
-    inQuestion = str(iarl)
+    # For each word in the reference word list
+    for ref in ref_lst:
 
-    for ref in loadRefs:
-        if len(ref) > 3: # to ignore the last line
-            splitRef = ref.split("::")
-            currentNum = splitRef[0]
-            currentAr = splitRef[1]
+        # Split reference list to get letter and rgb values
+        split_ref = ref.split("::")
+        ref_name = split_ref[0]
+        ref_data = split_ref[1]
 
-            eachPixRef = currentAr.split("],")
-            eachPixInQ = inQuestion.split("],")
+        # find the maximum number of iterations that we can check
+        if len(letter) >= len(ref_data):
+            max_it = len(ref_data)
+        else:
+            max_it = len(letter)
 
-            x = 0
-            while x < len(eachPixRef):
-                print(str(eachPixRef[x]) + " : " + str(eachPixInQ[x]))
-                if eachPixRef[x] == eachPixInQ[x]:
-                    matchedAr.append(currentNum)
+        # Iterate through each character in the letter and the reference letter
+        count = 0
+        for x in range(0, max_it):
+            if letter[x] == ref_data[x]:
+                count += 1
 
-                x += 1
-
-    print(matchedAr)
-    x = Counter(matchedAr)
-    print(x)
+        if (count == len(letter)):
+            print(ref_name)
+            return ref_name
 
 
+# TODO: Adds a line to the end of the file which throws things off unless removed
+# TODO: Appends to the end of the file every time. Should rewrite the file.
 def createreferencefile():
     """
     Create file containing bitmaps of reference images.
@@ -53,42 +55,10 @@ def createreferencefile():
 
     # create reference file for each number in "numbers"
     for let in lettersWeHave:
-        imgFilePath = "images/letters/" + letAr[let] + ".png"
+        imgFilePath = "Resources/letters/" + letAr[let] + ".png"
         refImage = Image.open(imgFilePath)
         refImageAr = np.array(refImage)
         refImageAr1 = str(refImageAr.tolist())
 
         lineToWrite = letAr[let] + "::" + refImageAr1 + "\n"
         letterArrayReferences.write(lineToWrite)
-
-
-def threshold(imageAr):
-    """
-    Turn colored image into black-and-white image.
-    :param imageAr:
-    :return:
-    """
-    balanceAr = []
-    newAr = imageArle
-
-    for row in imageAr:
-        for pix in row:
-            avgRGB = reduce(lambda x, y: x + y, pix[:3]) / len(pix[:3])
-            balanceAr.append(avgRGB)
-
-    balance = reduce(lambda x, y: x + y, balanceAr) / len(balanceAr)
-
-    for row in newAr:
-        for pix in row:
-            if reduce(lambda x, y: x + y, pix[:3]) / len(pix[:3]) > balance:
-                pix[0] = 255
-                pix[1] = 255
-                pix[2] = 255
-                pix[3] = 255
-            else:
-                pix[0] = 0
-                pix[1] = 0
-                pix[2] = 0
-                pix[3] = 255
-
-    return newAr

@@ -1,5 +1,4 @@
 import imagerecognition as imgrec
-# taco
 
 width,height = 5,5
 matrix = [['t', 'o', 'a', 's', 't'],
@@ -124,10 +123,10 @@ def main():
     Main function of the word search solver program.
     :return:
     """
-    printmatrix()
-    findword()
-    #createReferencesLetters()
-    #imgrec.whatLetAmI("images/letters/b.png")
+    #printmatrix()
+    #findword()
+    #imgrec.createreferencefile()
+    imgrec.determineletter("Resources/letters/c.png")
 
 
 main()
