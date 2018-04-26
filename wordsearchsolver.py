@@ -127,6 +127,7 @@ def main():
     #findword()
     #imgrec.createreferencefile()
     imgrec.determineletter("Resources/letters/c.png")
+    imgrec.searchpuzzle("Resources/wordsearches/wordsearch1.pdf")
 
 
 main()
