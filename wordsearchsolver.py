@@ -126,7 +126,7 @@ def main():
     #printmatrix()
     #findword()
     #imgrec.createreferencefile()
-    imgrec.determineletter("Resources/wordsearches/ws1.png")
+    imgrec.parseimage("Resources/wordsearches/ws1.png")
 
 
 main()
