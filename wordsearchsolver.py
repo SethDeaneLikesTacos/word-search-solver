@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 import pytesseract
 import re
 import pdf2image
+import easygui
 
 # path to tesseract (necessary for tesseract)
 pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe"
@@ -187,8 +188,8 @@ def findword(matrix, words_to_find, puz_image):
                     found = 1
                     y1 = y
                     x1 = x
-                    y2 = y1 - len(word) - 1
-                    x2 = x1 - len(word) - 1
+                    y2 = y1 + len(word) - 1
+                    x2 = x1 + len(word) - 1
 
         if found:
             print("FOUND: [" + word + "] (" + str(x1) + "," + str(y1) + ") | (" + str(x2) + ", " + str(y2) + ")")
@@ -213,7 +214,7 @@ def draw_line(draw, x1, x2, y1, y2):
     draw.line(
         (grid_start_col + x1 * 80 + 40, grid_start_row + y1 * 86 + 20,
          grid_start_col + x2 * 80 + 40, grid_start_row + y2 * 86 + 20)
-        , fill=(255, 0, 0, 255), width=2)
+        , fill=(255, 0, 0, 255), width=5)
     return
 
 
@@ -222,13 +223,15 @@ def main():
     Main function of the word search solver program.
     :return:
     """
-    puz_image = pdf2image.convert_from_path('wordsearches\\ws1.pdf')
+    path = easygui.fileopenbox()
+    puz_image = pdf2image.convert_from_path(path)
     array = image_to_array(puz_image[0])
     words_to_find = search_words(puz_image[0])
     for i in words_to_find:
         print(i)
     print_matrix(array)
     solved_image = findword(array, words_to_find, puz_image[0])
+    solved_image.show()
     solved_image.save("out.png")
 
 
