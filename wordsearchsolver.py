@@ -20,6 +20,10 @@ grid_start_col = 95
 grid_end_row = 1424
 grid_end_col = 1211
 
+# dimensions where words to search for are
+fw_x1, fw_y1 = 1227, 244
+fw_x2, fw_y2 = 1637, 1424
+
 
 def image_to_array(puz_image):
     """
@@ -66,9 +70,7 @@ def search_words(puz_image):
     :param puz_image: image object of entire puzzle
     :return: list of words to find in the puzzle
     """
-    # dimensions where words to search for are
-    fw_x1, fw_y1 = 1227, 244
-    fw_x2, fw_y2 = 1637, 1424
+
 
     # read image into array
     puzzle = np.array(puz_image)
@@ -117,6 +119,7 @@ def findword(matrix, words_to_find, puz_image):
     :return: image object with highlighted words
     """
     draw = ImageDraw.Draw(puz_image)
+    found_array = []
 
     for word in range(len(words_to_find)):
         word = words_to_find[word]
@@ -194,10 +197,22 @@ def findword(matrix, words_to_find, puz_image):
         if found:
             print("FOUND: [" + word + "] (" + str(x1) + "," + str(y1) + ") | (" + str(x2) + ", " + str(y2) + ")")
             draw_line(draw, x1, x2, y1, y2)
+            found_array.append(1)
 
         if found == 0:
             print("!! WORD NOT FOUND !!")
+            found_array.append(0)
 
+    return puz_image, draw, found_array
+
+
+def cross_out_words(puz_image, draw, found_array):
+    for i in range(len(found_array)):
+        if (found_array[i] == 1):
+            draw.line(
+                (fw_x1, 15 + fw_y1 + i * 50,
+                 fw_x2, 15 + fw_y1 + i * 50)
+                , fill=(255, 0, 0, 255), width=5)
     return puz_image
 
 
@@ -230,7 +245,8 @@ def main():
     for i in words_to_find:
         print(i)
     print_matrix(array)
-    solved_image = findword(array, words_to_find, puz_image[0])
+    solved_image, draw, found_array = findword(array, words_to_find, puz_image[0])
+    solved_image = cross_out_words(solved_image, draw, found_array)
     solved_image.show()
     solved_image.save("out.png")
 
