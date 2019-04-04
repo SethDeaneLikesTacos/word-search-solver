@@ -1,12 +1,18 @@
 import numpy as np
+import os
 from PIL import Image, ImageDraw
 import pytesseract
 import re
 import pdf2image
 import easygui
 
-# path to tesseract (necessary for tesseract)
-pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe"
+# path to tesseract application
+# Example Windows path
+if os.name == 'nt':
+    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe"
+# Example Mac Path
+if os.name == 'posix':
+    pytesseract.pytesseract.tesseract_cmd = "/usr/local/Cellar/tesseract/4.0.0_1/bin/tesseract"
 
 # color type used by pytesseract
 RGB_VAL = "RGB"
@@ -238,7 +244,7 @@ def main():
     Main function of the word search solver program.
     :return:
     """
-    path = easygui.fileopenbox()
+    path = easygui.fileopenbox(default = "*.pdf")
     puz_image = pdf2image.convert_from_path(path)
     array = image_to_array(puz_image[0])
     words_to_find = search_words(puz_image[0])
